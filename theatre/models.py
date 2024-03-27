@@ -6,8 +6,12 @@ class Actor(models.Model):
     first_name = models.CharField(max_length=60)
     last_name = models.CharField(max_length=60)
 
-    def __str__(self):
+    @property
+    def full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    def __str__(self):
+        return self.full_name
 
 
 class Genre(models.Model):
