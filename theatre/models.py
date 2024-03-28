@@ -114,7 +114,7 @@ class Ticket(models.Model):
         )
 
     class Meta:
-        unique_together = ("play", "row", "seat")
+        unique_together = ("performance", "row", "seat")
         ordering = ["row", "seat"]
 
     def __str__(self):
