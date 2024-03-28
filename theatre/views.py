@@ -153,6 +153,11 @@ class PerformanceViewSet(ModelViewSet):
         return PerformanceSerializer
 
 
+class ReservationPagination(PageNumberPagination):
+    page_size = 10
+    max_page_size = 100
+
+
 class ReservationViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
@@ -162,6 +167,7 @@ class ReservationViewSet(
         "tickets__performance__play", "tickets__performance__theatre_hall"
     )
     serializer_class = ReservationSerializer
+    pagination_class = ReservationPagination
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
