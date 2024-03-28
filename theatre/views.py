@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db.models import Count, F
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
@@ -16,6 +17,7 @@ from .models import (
     Play,
     Performance,
 )
+from .permissions import IsAdminOrIfAuthenticatedReadOnly
 from .serializers import (
     ActorSerializer,
     GenreSerializer,
@@ -36,7 +38,7 @@ from .serializers import (
 class ActorViewSet(ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
     authentication_classes = [JWTAuthentication]
 
     def get_serializer_class(self):
@@ -48,7 +50,7 @@ class ActorViewSet(ModelViewSet):
 class GenreViewSet(ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
     authentication_classes = [JWTAuthentication]
 
 
@@ -60,7 +62,7 @@ class PlayViewSet(
 ):
     queryset = Play.objects.prefetch_related("actors", "genres")
     serializer_class = PlaySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
     authentication_classes = [JWTAuthentication]
 
     @staticmethod
@@ -114,7 +116,7 @@ class PlayViewSet(
 class TheatreHallViewSet(ModelViewSet):
     queryset = TheatreHall.objects.all()
     serializer_class = TheatreHallSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
     authentication_classes = [JWTAuthentication]
 
 
