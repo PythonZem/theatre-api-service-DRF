@@ -17,7 +17,13 @@ class ActorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Actor
-        fields = ("id", "first_name", "last_name", "full_name")
+        fields = ("id", "first_name", "last_name", "full_name", "image")
+
+
+class ActorImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Actor
+        fields = ("id", "image")
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -31,7 +37,7 @@ class PlaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Play
-        fields = ("id", "title", "description", "actors", "genres")
+        fields = ("id", "title", "description", "actors", "genres", "image")
 
 
 class PlayListSerializer(PlaySerializer):
@@ -44,7 +50,7 @@ class PlayListSerializer(PlaySerializer):
 
     class Meta:
         model = Play
-        fields = ("id", "title", "genres", "actors")
+        fields = ("id", "title", "genres", "actors", "image")
 
 
 class PlayDetailSerializer(PlaySerializer):
@@ -53,7 +59,13 @@ class PlayDetailSerializer(PlaySerializer):
 
     class Meta:
         model = Play
-        fields = ("id", "title", "description", "actors", "genres",)
+        fields = ("id", "title", "description", "actors", "genres", "image")
+
+
+class PlayImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Play
+        fields = ("id", "image")
 
 
 class TheatreHallSerializer(serializers.ModelSerializer):
@@ -126,15 +138,25 @@ class PerformanceDetailSerializer(PerformanceSerializer):
 
     class Meta:
         model = Performance
-        fields = ("id", "show_time", "play", "theatre_hall", "taken_places")
+        fields = (
+            "id",
+            "show_time",
+            "play",
+            "theatre_hall",
+            "taken_places"
+        )
 
 
 class TicketListSerializer(TicketSerializer):
-    movie_session = PerformanceListSerializer(many=False, read_only=True)
+    performance = PerformanceListSerializer(
+        many=False, read_only=True
+    )
 
 
 class ReservationSerializer(serializers.ModelSerializer):
-    tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
+    tickets = TicketSerializer(
+        many=True, read_only=False, allow_empty=False
+    )
 
     class Meta:
         model = Reservation

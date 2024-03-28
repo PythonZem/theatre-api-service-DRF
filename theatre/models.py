@@ -1,11 +1,23 @@
+import os
+import uuid
+
 from django.conf import settings
 from django.db import models
+from django.utils.text import slugify
 from rest_framework.exceptions import ValidationError
+
+
+def image_file_path(instance, filename):
+    _, extension = os.path.splitext(filename)
+    filename = f"{slugify(instance)}-{uuid.uuid4()}{extension}"
+
+    return os.path.join(f"uploads/{instance.__class__.__name__}/", filename)
 
 
 class Actor(models.Model):
     first_name = models.CharField(max_length=60)
     last_name = models.CharField(max_length=60)
+    image = models.ImageField(null=True, upload_to=image_file_path)
 
     @property
     def full_name(self):
@@ -27,6 +39,7 @@ class Play(models.Model):
     description = models.TextField()
     actors = models.ManyToManyField(Actor, blank=True)
     genres = models.ManyToManyField(Genre, blank=True)
+    image = models.ImageField(null=True, upload_to=image_file_path)
 
     def __str__(self):
         return self.title
@@ -118,4 +131,4 @@ class Ticket(models.Model):
         ordering = ["row", "seat"]
 
     def __str__(self):
-        return f"{self.performance} (row: {self.row}, seat: {self})"
+        return f"{self.performance} (row: {self.row}, seat: {self.seat})"
