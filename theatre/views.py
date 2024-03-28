@@ -1,6 +1,9 @@
+from datetime import datetime
+
+from django.db.models import Count, F
 from django.shortcuts import render
 from rest_framework import mixins, viewsets
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from .models import (
     Actor,
@@ -18,7 +21,7 @@ from .serializers import (
     ReservationSerializer,
     TheatreHallSerializer,
     PlayListSerializer,
-    PlayDetailSerializer,
+    PlayDetailSerializer, PerformanceListSerializer, PerformanceDetailSerializer, ReservationListSerializer,
 )
 
 
@@ -63,7 +66,7 @@ class PlayViewSet(
         return queryset.distinct()
 
     def get_serializer_class(self):
-        if self.action == "List":
+        if self.action == "list":
             return PlayListSerializer
 
         if self.action == "retrieve":
@@ -77,11 +80,59 @@ class TheatreHallViewSet(ModelViewSet):
     serializer_class = TheatreHallSerializer
 
 
-class ReservationViewSet(ModelViewSet):
-    queryset = Reservation.objects.all()
+class PerformanceViewSet(ModelViewSet):
+    queryset = (
+        Performance.objects.all()
+        .select_related("play", "theatre_hall")
+        .annotate(
+            tickets_available=(
+                F("theatre_hall__rows") * F("theatre_hall__seats_in_row")
+                - Count("tickets")
+            )
+        )
+    )
+    serializer_class = PerformanceSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if date := self.request.query_params.get("date"):
+            date = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(show_time__date=date)
+
+        if play_id := self.request.query_params.get("play"):
+            queryset = queryset.filter(play_id=int(play_id))
+
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PerformanceListSerializer
+
+        if self.action == "retrieve":
+            return PerformanceDetailSerializer
+
+        return PerformanceSerializer
+
+
+class ReservationViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    GenericViewSet,
+):
+    queryset = Reservation.objects.prefetch_related(
+        "tickets__performance__play", "tickets__performance__theatre_hall"
+    )
     serializer_class = ReservationSerializer
 
+    def get_queryset(self):
+        return Reservation.objects.filter(user=self.request.user)
 
-class PerformanceViewSet(ModelViewSet):
-    queryset = Performance.objects.all()
-    serializer_class = PerformanceSerializer
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ReservationListSerializer
+
+        return ReservationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
