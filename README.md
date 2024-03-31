@@ -110,6 +110,8 @@ I used JWT in this project to manage accesses
 
 ## How it looks
 
+
+
 ![img_1.png](img_1.png)
 
 ![img.png](img.png)
