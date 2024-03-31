@@ -78,6 +78,7 @@ To get started with the project, follow these steps:
 
 
 For detailed API documentation and endpoint usage, refer to the API documentation available in the project or access **/api/doc/swagger/** when the server is running.
+
 ## User endpoints:
 
 I used JWT in this project to manage accesses
@@ -101,6 +102,11 @@ I used JWT in this project to manage accesses
 - manage user:
 
         /api/user/me
+
+## Run with docker
+
+        docker-compose build
+        ducker-compose up
 
 ## How it looks
 
