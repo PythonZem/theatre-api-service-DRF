@@ -118,12 +118,12 @@ class PlayViewSet(
         parameters=[
             OpenApiParameter(
                 "genres",
-                type={"type": "list", "items": {"type": OpenApiTypes.STR}},
+                type={"type": "list", "items": {"type": "number"}},
                 description="Filter by genre id (ex. ?genres=2,5)",
             ),
             OpenApiParameter(
                 "actors",
-                type={"type": "list", "items": {"type": OpenApiTypes.STR}},
+                type={"type": "list", "items": {"type": "number"}},
                 description="Filter by actor id (ex. ?actors=2,5)",
             ),
             OpenApiParameter(
