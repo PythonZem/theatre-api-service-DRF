@@ -34,7 +34,7 @@ To get started with the project, follow these steps:
 
 1. Clone the repository to your local machine:
 
-        git clone https://github.com/yourusername/theatre-business-management.git
+        git clone https://github.com/PythonZem/theatre-api-service-DRF.git
 
 2. Navigate to the project directory:
 
@@ -103,3 +103,19 @@ I used JWT in this project to manage accesses
         /api/user/me
 
 ## How it looks
+
+![img_1.png](img_1.png)
+
+![img.png](img.png)
+
+![img_2.png](img_2.png)
+
+![img_3.png](img_3.png)
+
+![img_4.png](img_4.png)
+
+![img_5.png](img_5.png)
+
+![img_6.png](img_6.png)
+
+![img_7.png](img_7.png)
