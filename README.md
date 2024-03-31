@@ -28,8 +28,6 @@ This project is a Django-based RESTful API framework designed to manage various 
 
 ## Quick Start
 
-**Installation**
-
 (!!Make sure Python3 is installed on your system!!)
 
 To get started with the project, follow these steps:
@@ -103,4 +101,5 @@ I used JWT in this project to manage accesses
 - manage user:
 
         /api/user/me
+
 ## How it looks
